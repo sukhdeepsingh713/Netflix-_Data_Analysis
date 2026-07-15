@@ -240,13 +240,17 @@ def load_data(file) -> pd.DataFrame:
     return df
 
 
-# ----------------------------------------------------------------------------
-# LOAD DATA DIRECTLY (No File Upload)
-# ----------------------------------------------------------------------------
-DATA_PATH = "netflix1.csv"      # Change the filename if needed
-
-raw = load_data(DATA_PATH)
-
+DATA_PATH = "netflix1.csv"
+try:
+    raw = load_data(DATA_PATH)
+except FileNotFoundError:
+    st.sidebar.warning("netflix1.csv not found next to app.py")
+    uploaded = st.sidebar.file_uploader("Upload the Netflix CSV", type="csv")
+    if uploaded is None:
+        st.title("🎬 Netflix Catalog Dashboard")
+        st.info("Upload your Netflix CSV in the sidebar to get started.")
+        st.stop()
+    raw = load_data(uploaded)
 # ----------------------------------------------------------------------------
 # SIDEBAR — BRAND, MENU, FILTERS
 # ----------------------------------------------------------------------------
